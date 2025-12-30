@@ -59,7 +59,48 @@ public class AdmineController {
     	return "adminscreen";
     }
     
+    @RequestMapping("/view")
+    public String viewpage(@ModelAttribute Student stud,Model m)
+    {
+      List<Student>st=s.getAllStudent();
+      m.addAttribute("data", st);
+	return "view";
+    }
     
+    @RequestMapping("/search")
+    public String getStudentBatch(@RequestParam("batchNumber") String batchNumber,@RequestParam("batchMode") String batchMode,Model m)
+    {
+    	
+    	List<Student>result=s.findAllByBatchNumberAndBatchMode(batchNumber,batchMode);
+    	
+    	if(result.size()>0)
+    	{
+    		m.addAttribute("data", result);
+    	}
+    	else
+    	{
+    		List<Student>list=s.getAllStudent();
+    		m.addAttribute("data", list);
+    		m.addAttribute("message","No record found for the Batch" + batchNumber + "  " + batchMode);
+    		
+    	}
+    return "view";
+    }
     
+    @RequestMapping("/fees")
+    public String onFees(@RequestParam("rollno") int studentId,Model m)
+    {
+    	Student stu=s.getSingleStudentt(studentId);
+    	m.addAttribute("st", stu);
+    	return "fees";
+    }
+    @RequestMapping("/payfees")
+    public String payFees(@RequestParam("studentid")int studentId,@RequestParam("amount") double amount,Model m)
+    {
+    	s.payFees(studentId,amount);
+    	List<Student>list=s.getAllStudent();
+		m.addAttribute("data", list);
+    	return "view";
+    }
 
 }
