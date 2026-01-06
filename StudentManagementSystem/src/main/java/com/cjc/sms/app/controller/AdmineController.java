@@ -51,9 +51,9 @@ public class AdmineController {
     }
     
     @RequestMapping("/delete")
-    public String removeStudent(@RequestParam("rollno") int rollno,Model m)
+    public String removeStudent(@RequestParam("studentId") int studentId,Model m)
     {
-    	s.deleteStudent(rollno);
+    	s.deleteStudent(studentId);
     	List<Student> st = s.getAllStudent();
     	m.addAttribute("data", st);
     	return "adminscreen";
@@ -88,19 +88,41 @@ public class AdmineController {
     }
     
     @RequestMapping("/fees")
-    public String onFees(@RequestParam("rollno") int studentId,Model m)
+    public String onFees(@RequestParam("studentId") int studentId,Model m)
     {
     	Student stu=s.getSingleStudentt(studentId);
     	m.addAttribute("st", stu);
     	return "fees";
     }
     @RequestMapping("/payfees")
-    public String payFees(@RequestParam("studentid")int studentId,@RequestParam("amount") double amount,Model m)
+    public String payFees(@RequestParam("studentId")int studentId,@RequestParam("feesPaid") double amount,Model m)
     {
     	s.payFees(studentId,amount);
     	List<Student>list=s.getAllStudent();
 		m.addAttribute("data", list);
     	return "view";
     }
+    
+    @RequestMapping("shift")
+    public String shiftBatch(@RequestParam("studentId") int studentId,Model m) 
+    {
 
+    	
+    	Student st =s.shiftBatch(studentId);
+		m.addAttribute("data", st);
+    	return "shiftBatch";
+       
+        
+    	
+    }
+    @RequestMapping("shiftbatch")
+    public String shiftStudent(@RequestParam("studentId") int rollno,@RequestParam("newBatchNumber") String newBatchNumber,@RequestParam("newBatchMode") String newBatchMode,Model m)
+    {
+    	s.shiftBatch( newBatchNumber, newBatchMode,rollno);
+        List<Student> students = s.getAllStudent();
+        m.addAttribute("data", students);
+        return "view";
+    }
+    
+    
 }
